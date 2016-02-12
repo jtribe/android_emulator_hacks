@@ -3,6 +3,7 @@ package no.finn.android_emulator_hacks;
 import android.app.IntentService;
 import android.app.KeyguardManager;
 import android.app.Service;
+import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -11,6 +12,8 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class Badservice extends IntentService {
     private Handler handler = new Handler();
@@ -34,6 +37,7 @@ public class Badservice extends IntentService {
         wifiLock.acquire();
 
         KeyguardManager keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+        //deprecated  API > 16
         keyguardLock = keyguardManager.newKeyguardLock("hack_activity");
         keyguardLock.disableKeyguard();
 
@@ -46,7 +50,7 @@ public class Badservice extends IntentService {
 
         SettingsContentObserver observer = new SettingsContentObserver(new Handler());
         this.getApplicationContext().getContentResolver().registerContentObserver(
-                android.provider.Settings.System.CONTENT_URI, true, observer);
+            android.provider.Settings.System.CONTENT_URI, true, observer);
 
         handler.postDelayed(new Runnable() {
             @Override
@@ -57,8 +61,8 @@ public class Badservice extends IntentService {
                 keyguardLock.reenableKeyguard();
                 stopSelf();
             }
-        }, 1000 * 60 * 60);
-        
+        }, 1000 * 60 * 30);
+
         muteVolume();
     }
 
@@ -92,10 +96,15 @@ public class Badservice extends IntentService {
     private void muteVolume() {
         int[] volumes = new int[]{AudioManager.STREAM_VOICE_CALL, AudioManager.STREAM_SYSTEM, AudioManager.STREAM_RING, AudioManager.STREAM_MUSIC, AudioManager.STREAM_NOTIFICATION};
         for (int volumeType : volumes) {
-            audio.setStreamMute(volumeType, true);
+          //deprecated so adding adjust stream volume API > 16
+          audio.setStreamMute(volumeType, true);
+          audio.adjustStreamVolume(AudioManager.STREAM_SYSTEM,AudioManager.ADJUST_LOWER,AudioManager.ADJUST_MUTE);
         }
+
+        //deprecated so adding setRingerMode API > 16
         audio.setVibrateSetting(AudioManager.VIBRATE_TYPE_NOTIFICATION, AudioManager.VIBRATE_SETTING_OFF);
         audio.setVibrateSetting(AudioManager.VIBRATE_TYPE_RINGER, AudioManager.VIBRATE_SETTING_OFF);
+        audio.setRingerMode(AudioManager.RINGER_MODE_SILENT);
     }
 
 }

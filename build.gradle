@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.1.0'
+        classpath 'com.android.tools.build:gradle:1.3.0'
     }
 }
 task wrapper(type: Wrapper) {
@@ -14,10 +14,10 @@ task wrapper(type: Wrapper) {
 
 android {
     defaultConfig {
-        compileSdkVersion 22
-        targetSdkVersion 22
-        buildToolsVersion '22.0.1'
-        minSdkVersion 14
-        testApplicationId "no.finn.android_emulator_hacks"
+        compileSdkVersion 23
+        targetSdkVersion 23
+        buildToolsVersion '23.0.1'
+        minSdkVersion 15
+        testApplicationId "no.finn.androidemulatorhacks"
     }
 }
